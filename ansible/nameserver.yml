@@ -1,0 +1,9 @@
+---
+- hosts: nameservers
+  #roles:
+  #- common
+  #- devtools
+  #- devops_app
+  tasks:
+    - name: hostname
+      shell: hostname -a

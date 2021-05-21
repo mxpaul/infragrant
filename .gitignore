@@ -1,0 +1,18 @@
+# vagrant runtime
+/.vagrant
+
+# logs
+*.log
+
+# mac files
+.DS_Store
+
+# vim swap files
+*.swp
+
+# webstorm
+.idea
+
+# vscode
+.vscode
+*code-workspace
