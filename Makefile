@@ -4,11 +4,12 @@ ANSIBLE_ENVIRONMENT = PYTHONUNBUFFERED=1 ANSIBLE_FORCE_COLOR=true ANSIBLE_HOST_K
 ANSIBLE_SSH_ARGS = -o UserKnownHostsFile=/dev/null -o IdentitiesOnly=yes -o ControlMaster=auto \
 	-o ControlPersist=60s
 
-override ANSIBLE_PLAYBOOK_FLAGS += --connection=ssh --timeout=30 --limit="all" \
+override ANSIBLE_PLAYBOOK_FLAGS += --connection=ssh --timeout=30 --limit="$(ANSIBLE_LIMIT)" \
 	--extra-vars "use_google_dns=false" \
   --vault-id "$(VAULT_ID)@$(VAULT_PASS_FILE)"
 
 ANSIBLE_INVENTORY_FILE = .vagrant/provisioners/ansible/inventory
+ANSIBLE_LIMIT := all
 
 VAULT_ID::=do_mxpatlas
 VAULT_PASS_FILE::=~/.secret/vault.do_mxpatlas
