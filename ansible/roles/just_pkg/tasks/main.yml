@@ -1,0 +1,9 @@
+---
+-
+  name: "JUSTPKG: Install RPMS"
+  yum:
+    name: "{{ required_rpms }}"
+    state: present
+  become: true
+  when: ansible_os_family == 'RedHat'
+  tags: [ "just_pkg", "install" ]

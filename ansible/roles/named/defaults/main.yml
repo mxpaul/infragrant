@@ -1,9 +1,14 @@
 ---
 named_sysconfig_dir: "/etc"
+named_workdir: "/var/named"
+named_workdir_chroot: "{{ named_workdir}}/chroot/{{ named_workdir }}"
+named_master_dst: "{{ named_workdir }}/masters"
 named_user: "named"
 named_group: "named"
 named_service: "named-chroot"
 rsyslog_service: "rsyslog"
 bind_package: "bind-chroot"
 bind_version: "32:9.11.20-5.el8_3.1"
+named_master_zones: []
+named_slave_zones: []
 

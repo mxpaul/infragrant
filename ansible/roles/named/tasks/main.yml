@@ -22,13 +22,46 @@
   become: true
   tags: [ "named", "config", "rsyslog" ]
 -
-  name: "NAMED: manage named.conf"
+  name: "NAMED: create named.conf"
   template:
     src: named.conf.j2
     dest: "{{ named_sysconfig_dir }}/named.conf"
     owner: "root"
     group: "{{ named_group }}"
     mode: "0640"
+  notify: "restart named"
+  become: true
+  tags: [ "named", "config" ]
+-
+  name: "NAMED: create master.conf"
+  template:
+    src: master.conf.j2
+    dest: "{{ named_sysconfig_dir }}/named/master.conf"
+    owner: "root"
+    group: "{{ named_group }}"
+    mode: "0640"
+  notify: "reload named"
+  become: true
+  tags: [ "named", "config", "zones" ]
+-
+  name: "NAMED: create masters directory for zone files"
+  file:
+    path: "{{ named_master_dst }}"
+    owner: "root"
+    group: "named"
+    mode: "0750"
+    state: directory
+  become: true
+  tags: [ "named", "config", "zones" ]
+-
+  name: "NAMED: copy master zone files"
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ named_master_dst }}/{{ item.name }}"
+    owner: "root"
+    group: "{{ named_group }}"
+    mode: "0640"
+  with_items: "{{ named_master_zones }}"
   notify: "reload named"
   become: true
   tags: [ "named", "config" ]

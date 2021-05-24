@@ -4,3 +4,8 @@
   - role: named
     vars:
       bind_version: "32:9.11.20-5.el8_3.1"
+  - role: just_pkg
+    vars:
+      required_rpms:
+        - "bind-utils-32:9.11.20-5.el8_3.1"
+
