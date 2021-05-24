@@ -1,0 +1,16 @@
+---
+-
+  name: restart rsyslog
+  service: name={{ rsyslog_service }} state=restarted
+  become: true
+  tags: [ "named", "service", "rsyslog" ]
+-
+  name: restart named
+  service: name={{ named_service }} state=restarted
+  become: true
+  tags: [ "named", "service" ]
+-
+  name: reload named
+  service: name={{ named_service }} state=reloaded
+  become: true
+  tags: [ "named", "service" ]

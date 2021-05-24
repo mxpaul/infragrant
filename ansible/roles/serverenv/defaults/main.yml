@@ -1,0 +1,5 @@
+---
+required_rpms:
+  - tree
+  - vim
+  - net-tools

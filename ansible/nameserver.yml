@@ -1,9 +1,6 @@
 ---
 - hosts: nameservers
-  #roles:
-  #- common
-  #- devtools
-  #- devops_app
-  tasks:
-    - name: hostname
-      shell: hostname -a
+  roles:
+  - role: named
+    vars:
+      bind_version: "32:9.11.20-5.el8_3.1"

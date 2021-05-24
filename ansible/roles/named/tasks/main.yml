@@ -1,0 +1,39 @@
+---
+-
+  name: "NAMED: Install bind"
+  yum:
+    pkg: "{{ bind_package }}-{{ bind_version }}"
+    state: present
+    allow_downgrade: true
+    lock_timeout: 5
+  notify: "restart named"
+  become: true
+  when: ansible_os_family == 'RedHat'
+  tags: [ "named", "install" ]
+-
+  name: "NAMED: create rsyslog socket for chroot"
+  copy:
+    dest: "/etc/rsyslog.d/named_chroot_socket.conf"
+    content: "$AddUnixListenSocket /var/named/chroot/dev/log"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  notify: "restart rsyslog"
+  become: true
+  tags: [ "named", "config", "rsyslog" ]
+-
+  name: "NAMED: manage named.conf"
+  template:
+    src: named.conf.j2
+    dest: "{{ named_sysconfig_dir }}/named.conf"
+    owner: "root"
+    group: "{{ named_group }}"
+    mode: "0640"
+  notify: "reload named"
+  become: true
+  tags: [ "named", "config" ]
+-
+  name: "NAMED: service enable"
+  service: name={{ named_service }} enabled=yes state=started
+  become: true
+  tags: [ "named", "service" ]

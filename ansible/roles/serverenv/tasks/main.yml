@@ -1,0 +1,9 @@
+---
+-
+  name: "SERVERENV: Install RPMS"
+  yum:
+    name: "{{ required_rpms }}"
+    state: present
+  become: true
+  when: ansible_os_family == 'RedHat'
+  tags: [ "serverenv", "install", "rpm" ]
