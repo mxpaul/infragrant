@@ -20,7 +20,12 @@ options {
 	memstatistics-file "/var/named/data/named_mem_stats.txt";
 	secroots-file	"/var/named/data/named.secroots";
 	recursing-file	"/var/named/data/named.recursing";
-	allow-query     { localhost; };
+
+	allow-query     { 
+{% for addr_spec in named_allow_query %}
+		{{ addr_spec }}; 
+{% endfor %}
+	};
 
 	recursion yes;
 

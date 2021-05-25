@@ -22,4 +22,5 @@ named_listen_ipv6_ports:
   - 53
 named_listen_ipv6_addr_list:
   - "any"
-
+named_allow_query:
+  - "127.0.0.1"
