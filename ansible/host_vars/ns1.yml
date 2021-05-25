@@ -5,3 +5,13 @@ named_master_zones:
     allow_transfer:
       - "172.16.4.4"
       - "172.16.8.1"
+named_slave_zones:
+  - name: "4.16.172.in-addr.arpa"
+    masters:
+      - "172.16.4.4"
+  - name: "8.16.172.in-addr.arpa"
+    masters:
+      - "172.16.4.4"
+  - name: "16.16.172.in-addr.arpa"
+    masters:
+      - "172.16.4.4"

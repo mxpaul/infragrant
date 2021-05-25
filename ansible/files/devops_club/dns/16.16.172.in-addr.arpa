@@ -1,4 +1,4 @@
-$ORIGIN devops.club.
+$ORIGIN 16.16.172.in-addr.arpa.
 $TTL 3600
 @       3600 IN      SOA     ns1.devops.club. admin.devops.club. (
               2021052501 ; Serial (YYYYMMDDXX)
@@ -9,12 +9,7 @@ $TTL 3600
 )
 
 ; name servers - NS records
-@   3600     IN      NS      ns1.devops.club.
-@   3600     IN      NS      ns2.devops.club.
+@      IN      NS     ns1.devops.club.
+@      IN      NS     ns2.devops.club.
 
-; name servers - A records
-ns1      IN      A      172.16.8.8
-ns2      IN      A      172.16.4.4
-
-@        IN      A      172.16.16.10
-www      IN      A      172.16.16.10
+10      IN      PTR      www.devops.club.
