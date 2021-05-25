@@ -3,7 +3,9 @@
 ## What is this
 
 This repository is an example of closer-to-real-world infrastructure management with ansible.
+
 This is not a production ready sulution.
+
 This is not an ansible galaxy collection. 
 
 ## How to use
@@ -22,6 +24,11 @@ vagrant up
 
 ## Examples
 
+- Set up all servers with vagrant
+```
+make ansible
+
+```
 - Only set up named on ns1 machine:
 ```
 make ANSIBLE_PLAYBOOK_FLAGS="--tags named" ANSIBLE_LIMIT=ns1 ansible
