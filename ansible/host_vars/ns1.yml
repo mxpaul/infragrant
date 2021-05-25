@@ -9,9 +9,15 @@ named_slave_zones:
   - name: "4.16.172.in-addr.arpa"
     masters:
       - "172.16.4.4"
+    allow_notify:
+      - "172.16.8.1"
   - name: "8.16.172.in-addr.arpa"
     masters:
       - "172.16.4.4"
+    allow_notify:
+      - "172.16.8.1"
   - name: "16.16.172.in-addr.arpa"
     masters:
       - "172.16.4.4"
+    allow_notify:
+      - "172.16.8.1"

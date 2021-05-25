@@ -3,6 +3,8 @@ named_slave_zones:
   - name: "devops.club"
     masters:
       - "172.16.8.8"
+    allow_notify:
+      - "172.16.4.1"
 named_master_zones:
   - name: "4.16.172.in-addr.arpa"
     src: "{{ playbook_dir }}/files/devops_club/dns/4.16.172.in-addr.arpa"
