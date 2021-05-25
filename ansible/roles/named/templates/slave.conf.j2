@@ -1,22 +1,22 @@
 // ############################################################################
 // slave.conf: {{ ansible_managed }}
 // ############################################################################
-
 {% for zone in named_slave_zones %}
+
 zone "{{ zone.name }}" {
-    type slave;
-    file "{{ named_slave_dst}}/{{ zone.name }}";
-    masters {
+	type slave;
+	file "{{ named_slave_dst}}/{{ zone.name }}";
+	masters {
 {% for master in zone.masters %}
-          {{ master }};
+		{{ master }};
 {% endfor %}
-    };
+	};
 {% if zone.allow_notify | default([]) %}
-    allow-notify {
+	allow-notify {
 {% for host in zone.allow_notify %}
-          {{ host }};
+		{{ host }};
 {% endfor %}
-    };
+	};
 {% endif %}
 };
 {% endfor %}
