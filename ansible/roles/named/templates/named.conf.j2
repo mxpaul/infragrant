@@ -29,6 +29,14 @@ options {
 
 	recursion yes;
 
+{% if named_allow_recursion | default([]) %}
+	allow-recursion     { 
+{% for addr_spec in named_allow_recursion %}
+		{{ addr_spec }}; 
+{% endfor %}
+	};
+{% endif %}
+
 	dnssec-enable yes;
 	dnssec-validation yes;
 

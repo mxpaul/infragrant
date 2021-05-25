@@ -24,3 +24,5 @@ named_listen_ipv6_addr_list:
   - "any"
 named_allow_query:
   - "127.0.0.1"
+named_allow_recursion:
+  - "127.0.0.1"
