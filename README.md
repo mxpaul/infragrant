@@ -4,7 +4,7 @@
 
 This repository is an example of closer-to-real-world infrastructure management with ansible.
 
-This is not a production ready sulution.
+This is not a production ready solution.
 
 This is not an ansible galaxy collection. 
 
