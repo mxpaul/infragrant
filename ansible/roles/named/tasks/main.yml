@@ -33,13 +33,16 @@
   become: true
   tags: [ "named", "config" ]
 -
-  name: "NAMED: create master.conf"
+  name: "NAMED: create includes for named.conf"
   template:
-    src: master.conf.j2
-    dest: "{{ named_sysconfig_dir }}/named/master.conf"
+    src: "{{ item }}.j2"
+    dest: "{{ named_sysconfig_dir }}/named/{{ item }}"
     owner: "root"
     group: "{{ named_group }}"
     mode: "0640"
+  with_items:
+    - master.conf
+    - slave.conf
   notify: "reload named"
   become: true
   tags: [ "named", "config", "zones" ]
@@ -48,7 +51,17 @@
   file:
     path: "{{ named_master_dst }}"
     owner: "root"
-    group: "named"
+    group: "{{ named_group }}"
+    mode: "0750"
+    state: directory
+  become: true
+  tags: [ "named", "config", "zones" ]
+-
+  name: "NAMED: create slaves directory for zone files"
+  file:
+    path: "{{ named_slave_dst }}"
+    owner: "{{ named_user }}"
+    group: "{{ named_group }}"
     mode: "0750"
     state: directory
   become: true

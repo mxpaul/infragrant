@@ -3,8 +3,17 @@
 // ############################################################################
 
 options {
-	listen-on port 53 { 127.0.0.1; };
-	listen-on-v6 port 53 { ::1; };
+{% if named_listen_ipv4 %}
+{% for port in named_listen_ipv4_ports %}
+	listen-on port {{ port}} { {% for addr_spec in named_listen_ipv4_addr_list %}{{ addr_spec }};{% endfor %} };
+{% endfor %}
+{% endif %}
+{% if named_listen_ipv4 %}
+{% for port in named_listen_ipv6_ports %}
+	listen-on-v6 port {{ port}} { {% for addr_spec in named_listen_ipv6_addr_list %}{{ addr_spec }};{% endfor %} };
+{% endfor %}
+{% endif %}
+
 	directory 	"{{ named_workdir }}";
 	dump-file 	"/var/named/data/cache_dump.db";
 	statistics-file "/var/named/data/named_stats.txt";
@@ -42,3 +51,4 @@ zone "." IN {
 include "{{ named_sysconfig_dir }}/named.rfc1912.zones";
 include "{{ named_sysconfig_dir }}/named.root.key";
 include "{{ named_sysconfig_dir }}/named/master.conf";
+include "{{ named_sysconfig_dir }}/named/slave.conf";

@@ -1,0 +1,15 @@
+// ############################################################################
+// slave.conf: {{ ansible_managed }}
+// ############################################################################
+
+{% for zone in named_slave_zones %}
+zone "{{ zone.name }}" {
+    type slave;
+    file "{{ named_slave_dst}}/{{ zone.name }}";
+    masters {
+{% for master in zone.masters %}
+          {{ master }};
+{% endfor %}
+    };
+};
+{% endfor %}

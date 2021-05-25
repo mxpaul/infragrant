@@ -3,6 +3,7 @@ named_sysconfig_dir: "/etc"
 named_workdir: "/var/named"
 named_workdir_chroot: "{{ named_workdir}}/chroot/{{ named_workdir }}"
 named_master_dst: "{{ named_workdir }}/masters"
+named_slave_dst: "{{ named_workdir }}/slaves"
 named_user: "named"
 named_group: "named"
 named_service: "named-chroot"
@@ -11,4 +12,14 @@ bind_package: "bind-chroot"
 bind_version: "32:9.11.20-5.el8_3.1"
 named_master_zones: []
 named_slave_zones: []
+named_listen_ipv4: true
+named_listen_ipv4_ports:
+  - 53
+named_listen_ipv4_addr_list:
+  - "any"
+named_listen_ipv6: false
+named_listen_ipv6_ports:
+  - 53
+named_listen_ipv6_addr_list:
+  - "any"
 

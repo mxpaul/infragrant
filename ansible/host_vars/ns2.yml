@@ -1,0 +1,5 @@
+---
+named_slave_zones:
+  - name: "devops.club"
+    masters:
+      - "172.16.8.8"
