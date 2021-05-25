@@ -11,12 +11,12 @@ This is not an ansible galaxy collection.
 1. Set up `vagrant` on your machine (notebook, PC, etc). https://www.vagrantup.com/downloads
 2. Clone this repository.
 ```bash
-    git clone https://github.com/mxpaul/infragrant.git 
+git clone https://github.com/mxpaul/infragrant.git 
 ```
 3. Run `vagrant up` at repository root
 ```bash
-    cd infragrant
-    vagrant up
+cd infragrant
+vagrant up
 ```
 
 
