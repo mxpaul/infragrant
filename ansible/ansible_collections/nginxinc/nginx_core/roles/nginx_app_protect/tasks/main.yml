@@ -1,0 +1,110 @@
+---
+- name: Get package facts
+  package_facts:
+    manager: auto
+
+- name: Set supported_os when platform and version are in supported platforms dictionary
+  set_fact:
+    supported_os: true
+  when: ansible_facts['distribution'] | lower in item.key and ansible_facts['distribution_version'] | float in item.value
+  loop: "{{ query('dict', nginx_app_protect_linux_families) }}"
+
+- name: Set supported_os to false if fact not defined
+  set_fact:
+    supported_os: false
+  when: supported_os is not defined
+
+- name: Detect whether you are running a supported_os
+  debug:
+    msg: "supported_os {{ supported_os }}"
+    verbosity: 2
+
+- name: Check your desired nginx_app_protect_state
+  debug:
+    msg: "Desired nginx_app_protect_state {{ nginx_app_protect_state }}"
+
+- name: Abort if the OS / version combination is not supported
+  fail:
+    msg: "NGINX App Protect is not supported on os family {{ ansible_facts['distribution'] }} version {{ ansible_facts['distribution_version'] }}"
+  when: not supported_os
+
+- name: Check for conflicting config variables
+  block:
+    - name: Abort if there are conflicting security policy config variables
+      fail:
+        msg: "Conflicting variables: nginx_app_protect_security_policy_template_enable and nginx_app_protect_security_policy_file_enable cannot be truthy in the same play"
+      when: nginx_app_protect_security_policy_template_enable | bool and nginx_app_protect_security_policy_file_enable | bool
+
+    - name: Abort if there are conflicting log policy config variables
+      fail:
+        msg: "Conflicting variables: nginx_app_protect_log_policy_template_enable and nginx_app_protect_log_policy_file_enable cannot be truthy in the same play"
+      when: nginx_app_protect_log_policy_template_enable | bool and nginx_app_protect_log_policy_file_enable | bool
+
+    - name: Fail if variables for nginx_app_protect_security_policy_file_enable are not defined
+      assert:
+        that: ("{{ item }} is defined") and ("{{ item }} | length > 0")
+      loop:
+        - nginx_app_protect_security_policy_file_src
+        - nginx_app_protect_security_policy_file_dst
+      when: nginx_app_protect_security_policy_file_enable | bool
+
+    - name: Fail if variables for nginx_app_protect_log_policy_file_enable are not defined
+      assert:
+        that: ("{{ item }} is defined") and ("{{ item }} | length > 0")
+      loop:
+        - nginx_app_protect_log_policy_file_src
+        - nginx_app_protect_log_policy_file_dst
+      when: nginx_app_protect_log_policy_file_enable | bool
+  when: nginx_app_protect_configure | bool
+
+- name: Install NGINX App Protect
+  block:
+    - name: Install prerequisites
+      include_tasks: "{{ role_path }}/tasks/prerequisites/install-prerequisites.yml"
+      tags: nginx_app_protect_prerequisites
+
+    - name: Set up signing keys
+      include_tasks: "{{ role_path }}/tasks/keys/setup-keys.yml"
+      when: nginx_app_protect_state != "absent"
+            or nginx_app_protect_install_signatures | bool
+            or nginx_app_protect_install_threat_campaigns | bool
+      tags: nginx_app_protect_key
+
+    - name: Set up license
+      include_tasks: "{{ role_path }}/tasks/install/setup-license.yml"
+      when:
+        - nginx_app_protect_state != "absent"
+          or nginx_app_protect_install_signatures | bool
+          or nginx_app_protect_install_threat_campaigns | bool
+        - nginx_app_protect_setup_license | bool
+      tags: nginx_app_protect_setup_license
+
+    - name: Install NGINX App Protect
+      include_tasks: "{{ role_path }}/tasks/install/install-app-protect.yml"
+      tags: nginx_app_protect_install_app_protect
+
+    - name: Remove NGINX App Protect license
+      include_tasks: "{{ role_path }}/tasks/install/remove-license.yml"
+      when: nginx_app_protect_remove_license | bool
+      tags: nginx_app_protect_remove_license
+
+    - name: Configure NGINX App Protect
+      include_tasks: "{{ role_path }}/tasks/config/configure-app-protect.yml"
+      when: nginx_app_protect_configure | bool
+      tags: nginx_app_protect_configure
+  when: nginx_app_protect_state != "absent"
+
+- name: Ensure NGINX App Protect is running
+  meta: flush_handlers
+
+- name: Remove NGINX App Protect
+  block:
+    - name: Remove NGINX App Protect package
+      include_tasks: "{{ role_path }}/tasks/install/install-app-protect.yml"
+      tags: nginx_app_protect_remove
+
+    - name: Disable NGINX App Protect config
+      include_tasks: "{{ role_path }}/tasks/config/configure-app-protect.yml"
+      when: nginx_app_protect_configure | bool
+      tags: nginx_app_protect_remove_config
+  when: nginx_app_protect_state == "absent"

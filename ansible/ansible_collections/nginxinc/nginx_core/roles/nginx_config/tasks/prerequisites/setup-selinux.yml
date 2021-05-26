@@ -1,0 +1,73 @@
+---
+- name: (CentOS/RHEL) Install dependencies
+  block:
+    - name: (CentOS/RHEL 6/7) Install dependencies
+      yum:
+        name:
+          - policycoreutils-python
+          - setools
+      when: ansible_facts['distribution_major_version'] is version('8', '!=')
+
+    - name: (CentOS/RHEL 8) Install dependencies
+      yum:
+        name:
+          - libselinux-utils
+          - policycoreutils
+          - selinux-policy-targeted
+      when: ansible_facts['distribution_major_version'] is version('8', '==')
+  when: ansible_facts['os_family'] == "RedHat"
+
+- name: Set SELinux mode to permissive
+  selinux:
+    state: permissive
+    policy: targeted
+
+- name: Allow SELinux HTTP network connections
+  seboolean:
+    name: httpd_can_network_connect
+    state: yes
+    persistent: yes
+
+- name: Allow SELinux HTTP network connections
+  seboolean:
+    name: httpd_can_network_relay
+    state: yes
+    persistent: yes
+
+- name: Allow SELinux TCP connections on status ports
+  seport:
+    ports: "{{ nginx_config_status_port }}"
+    proto: tcp
+    setype: http_port_t
+    state: present
+  when: nginx_config_status_port is defined
+
+- name: Allow SELinux TCP connections on Rest API ports
+  seport:
+    ports: "{{ nginx_config_rest_api_port }}"
+    proto: tcp
+    setype: http_port_t
+    state: present
+  when: nginx_config_rest_api_port is defined
+
+- name: Allow SELinux TCP connections on specific ports
+  seport:
+    ports: "{{ nginx_config_selinux_tcp_ports }}"
+    proto: tcp
+    setype: http_port_t
+    state: present
+  when: nginx_config_selinux_tcp_ports is defined
+
+- name: Allow SELinux UDP connections on specific ports
+  seport:
+    ports: "{{ nginx_config_selinux_udp_ports }}"
+    proto: udp
+    setype: http_port_t
+    state: present
+  when: nginx_config_selinux_udp_ports is defined
+
+- name: Set SELinux mode to enforcing
+  selinux:
+    state: enforcing
+    policy: targeted
+  when: nginx_config_selinux_enforcing

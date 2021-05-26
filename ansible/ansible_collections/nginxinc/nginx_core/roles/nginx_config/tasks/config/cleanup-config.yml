@@ -1,0 +1,17 @@
+---
+- name: Find NGINX config files
+  find:
+    paths: "{{ item.directory }}"
+    patterns: "*.conf"
+    recurse: "{{ item.recurse | default(false) }}"
+  loop: "{{ nginx_config_cleanup_paths }}"
+  when: nginx_config_cleanup_paths is defined
+  register: nginx_config_files
+
+- name: Remove NGINX config files
+  file:
+    path: "{{ item }}"
+    state: absent
+  loop: "{{ nginx_config_files.files | default('') | map(attribute='path') |
+        list + nginx_config_cleanup_files | default('') | list }}"
+  notify: (Handler - NGINX Config) Run NGINX

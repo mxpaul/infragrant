@@ -1,0 +1,7 @@
+---
+- hosts: fronts
+  #collections:
+  #  - nginxinc.nginx_core
+  roles:
+  - role: nginxinc.nginx_core.nginx
+    become: true

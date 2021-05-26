@@ -1,0 +1,24 @@
+# Any private crt and keys #
+############################
+*.crt
+*.key
+*~
+\#*
+
+# OS Specific #
+###############
+Thumbs.db
+.DS_Store
+.vscode
+
+# Ansible specific #
+####################
+*.retry
+
+# Ansible collection build artifacts #
+######################################
+*.tar.gz
+
+# Python specific #
+###################
+__pycache__

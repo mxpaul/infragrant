@@ -1,0 +1,101 @@
+---
+# Specify whether you want to maintain your version of NGINX App Protect, upgrade to the latest version, or remove NGINX App Protect.
+# Can be used with `nginx_app_protect_version` to achieve fine grained control on which version of NGINX App Protect is installed/used on each playbook execution.
+# Using 'present' will install the latest version (or 'nginx_app_protect_version') of NGINX App Protect on a fresh install.
+# Using 'latest' will upgrade NGINX App Protect to the latest version (that matches your 'nginx_app_protect_version') of NGINX App Protect on every playbook execution.
+# Using 'absent' will remove NGINX App Protect from your system.
+# Default is present.
+nginx_app_protect_state: present
+
+# (Optional) Installs a specific version of NGINX App Protect
+# Default is to install the latest release.
+# nginx_app_protect_version: 22
+
+# If you have a RHEL subscription, NGINX App Protect's dependencies will use subscription repos.
+# Otherwise, it will source packages from CentOS' repositories.
+# Default is false.
+nginx_app_protect_use_rhel_subscription_repos: false
+
+# The installation of NGINX App Protect includes a base signature set, which may be out of date.
+# This option installs the latest NGINX App Protect signatures.
+# Default is true.
+nginx_app_protect_install_signatures: true
+
+# The installation of NGINX App Protect can include a page of frequently-updated, high-accuracy signatures called "threat campaigns".
+# This option installs the latest NGINX App Protect threat campaigns signatures.
+# Default is true.
+nginx_app_protect_install_threat_campaigns: true
+
+# (Optional) Choose where to fetch the NGINX App Protect and security updates signing keys from.
+# Default settings are the official NGINX signing key hosts.
+# nginx_app_protect_signing_key:
+#   nginx_plus: https://cs.nginx.com/static/keys/nginx_signing.key
+#   security_updates: https://cs.nginx.com/static/keys/app-protect-security-updates.key
+
+# Location of your NGINX App Protect license in your local machine.
+# Default is the files folder within the NGINX Ansible role.
+nginx_app_protect_license:
+  certificate: license/nginx-repo.crt
+  key: license/nginx-repo.key
+
+# Set up NGINX App Protect license (cert/key) before installation.
+# Default is true.
+nginx_app_protect_setup_license: true
+
+# Removes NGINX App Protect license (cert/key) after installation for security purposes.
+# Default is true.
+nginx_app_protect_remove_license: true
+
+# Start/Restart NGINX service when App Protect related changes are complete.
+# Default is true.
+nginx_app_protect_start: true
+
+# Increase NGINX service timeout to accommodate ruleset loading from default 90s.
+# Default is commented out.
+nginx_app_protect_service_modify: true
+nginx_app_protect_timeout: 180
+
+# Creates basic configuration files and enables NGINX App Protect on the target host
+nginx_app_protect_configure: false
+
+## DEPRECATED -- Use nginx_app_protect_security_policy_enable and nginx_app_protect_security_policy_file_* variables instead
+# Create a basic NGINX App Protect security policy file based on a template
+nginx_app_protect_security_policy_template_enable: true
+nginx_app_protect_security_policy_template:
+  template_file: app-protect-security-policy.j2
+  out_file_name: app-protect-security-policy.json
+  out_file_location: /etc/nginx/
+# possible values: transparent, blocking
+nginx_app_protect_security_policy_enforcement_mode: transparent
+
+## DEPRECATED -- Use nginx_app_protect_log_policy_file_enable and nginx_app_protect_log_policy_file_* variables instead
+# Create a basic NGINX App Protect log policy file based on a template
+nginx_app_protect_log_policy_template_enable: true
+nginx_app_protect_log_policy_template:
+  template_file: app-protect-log-policy.j2
+  out_file_name: app-protect-log-policy.json
+  out_file_location: /etc/nginx/
+# possible values: all, illegal, blocked
+nginx_app_protect_log_policy_filter_request_type: all
+
+## DEPRECATED -- Use nginxinc.nginx_config role instead (https://github.com/nginxinc/ansible-role-nginx-config)
+# Create a basic NGINX App Protect config file
+nginx_app_protect_conf_template_enable: false
+nginx_app_protect_conf_template:
+  template_file: nginx.conf.j2
+  out_file_name: nginx.conf
+  out_file_location: /etc/nginx/
+nginx_app_protect_demo_workload_protocol: http://
+nginx_app_protect_demo_workload_host: 10.1.1.1:8080
+nginx_app_protect_log_policy_syslog_target: 127.0.0.1:514  # DEPRECATED -- use nginx_app_protect_log_policy_target instead
+nginx_app_protect_log_policy_target: "syslog:server={{ nginx_app_protect_log_policy_syslog_target }}"
+
+# Copy local NGINX App Protect security policy to host
+nginx_app_protect_security_policy_file_enable: false
+nginx_app_protect_security_policy_file_src: files/config/security-policy.json
+nginx_app_protect_security_policy_file_dest: /etc/nginx/security-policy.json
+
+# Copy local NGINX App Protect log policy to host
+nginx_app_protect_log_policy_file_enable: false
+nginx_app_protect_log_policy_file_src: files/config/log-policy.json
+nginx_app_protect_log_policy_file_dest: /etc/nginx/log-policy.json

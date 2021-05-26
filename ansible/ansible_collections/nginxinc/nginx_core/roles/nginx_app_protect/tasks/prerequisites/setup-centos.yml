@@ -1,0 +1,6 @@
+---
+- name: (CentOS) Install dependencies
+  yum:
+    name:
+      - ca-certificates
+      - epel-release

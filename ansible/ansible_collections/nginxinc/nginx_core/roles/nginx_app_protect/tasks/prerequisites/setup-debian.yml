@@ -1,0 +1,8 @@
+---
+- name: (Debian/Ubuntu) Install dependencies
+  apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - dirmngr
+    update_cache: true

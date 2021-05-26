@@ -1,0 +1,32 @@
+---
+galaxy_info:
+  author: Daniel Edgar
+  description: Official Ansible role for NGINX App Protect
+  role_name: nginx_app_protect
+  company: F5 Networks, Inc.
+
+  license: Apache License, Version 2.0
+
+  min_ansible_version: 2.9
+
+  platforms:
+    - name: EL
+      versions:
+        - 7
+    - name: Debian
+      versions:
+        - stretch
+    - name: Ubuntu
+      versions:
+        - bionic
+
+  galaxy_tags:
+    - waf
+    - security
+    - nginx
+    - plus
+    - web
+    - server
+    - development
+
+dependencies: []
