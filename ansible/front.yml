@@ -5,3 +5,5 @@
   roles:
   - role: nginxinc.nginx_core.nginx
     become: true
+  - role: nginxinc.nginx_core.nginx_config
+    become: true

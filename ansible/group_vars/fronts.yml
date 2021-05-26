@@ -1,3 +1,78 @@
 ---
-nginx_version: "-1.21.0"
+###############################################################################
+# nginx role 
+###############################################################################
+nginx_version: "-1.21.0" # "-" is ansible yum module specific, this added to pkg name
 nginx_branch: mainline
+
+###############################################################################
+# nginx_config role
+###############################################################################
+nginx_config_debug_output: true
+
+nginx_config_selinux: false
+
+nginx_config_upload_ssl_enable: false
+
+nginx_config_main_template_enable: true
+nginx_config_main_template:
+  template_file: nginx.conf.j2
+  conf_file_name: nginx.conf
+  conf_file_location: /etc/nginx/
+#  modules:
+#    - modules/ngx_http_js_module.so
+  user: nginx
+  worker_processes: auto
+  pid: /var/run/nginx.pid
+  error_log:
+    location: /var/log/nginx/error.log
+    level: warn
+  worker_connections: 1024
+  http_enable: true
+  http_settings:
+    gzip:
+      enable: true
+      buffers:
+        number: 32
+        size: 4k
+      comp_level: 1
+      disable:
+        - '"msie6"'
+      http_version: 1.1
+      min_length: 20
+      proxied:
+        - expired
+      types:
+        - text/html
+      vary: false
+    default_type: application/octet-stream
+    access_log_format:
+      - name: main
+        format: |
+          '$remote_addr - $remote_user [$time_local] "$request" '
+          '$status $body_bytes_sent "$http_referer" '
+          '"$http_user_agent" "$http_x_forwarded_for"'
+    access_log_location:
+      - name: main
+        location: /var/log/nginx/access.log
+    keepalive_timeout: 65
+    cache: false
+    rate_limit: false
+    keyval: false
+    server_tokens: "off"
+    server_names_hash_bucket_size: 64
+    server_names_hash_max_size: 512
+  sub_filter:
+    last_modified: false
+    once: true
+  http_global_autoindex: false
+  custom_options:
+    - master_process on;
+  http_custom_options:
+    - aio off;
+  http_custom_includes:
+    - "/etc/nginx/sites-enabled/*.conf"
+  events_custom_options:
+    - accept_mutex off;
+  stream_enable: false
+
