@@ -1,0 +1,19 @@
+version: '2'
+
+services:
+  firefox:
+    environment:
+      PULSE_SERVER: "unix:$XDG_RUNTIME_DIR/pulse/native"
+    image: mrmxpaul/firefox-anon
+    container_name: firefox_anon
+    volumes:
+      - "./files/resolv.conf:/etc/resolv.conf"
+      - "/tmp/.X11-unix:/tmp/.X11-unix"
+      - "$XDG_RUNTIME_DIR/pulse:$XDG_RUNTIME_DIR/pulse"
+      - "/dev/shm:/dev/shm"
+    #  - "./Downloads:/home/tty/Downloads"
+    devices:
+      - /dev/snd:/dev/snd
+    group_add:
+      - "$PULSE_GROUP"
+
