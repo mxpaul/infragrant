@@ -4,7 +4,7 @@ services:
   firefox:
     environment:
       PULSE_SERVER: "unix:$XDG_RUNTIME_DIR/pulse/native"
-    image: mrmxpaul/firefox-anon
+    image: mrmxpaul/firefox-anon:latest
     container_name: firefox_anon
     volumes:
       - "./files/resolv.conf:/etc/resolv.conf"
