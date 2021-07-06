@@ -26,6 +26,6 @@ encrypt:
 	echo -n 'Hexlet Awesome Server' \
 		| ansible-vault encrypt_string --vault-id  "$(VAULT_ID)@$(VAULT_PASS_FILE)" --stdin-name 'server_message'
 
-galaxy:
+vendor-galaxy:
 	ansible-galaxy install -v -r requirements.yml
 	ansible-galaxy collection install -v -r requirements.yml
